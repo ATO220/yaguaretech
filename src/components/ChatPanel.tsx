@@ -3,12 +3,15 @@ import React, { useState } from "react";
 import CommandInput from "./CommandInput";
 import { cn } from "@/lib/utils";
 import CodeBlock from "./CodeBlock";
+import { generateCode } from "@/services/deepSeekService";
+import { useToast } from "@/hooks/use-toast";
 
 interface Message {
   id: string;
   content: string;
   sender: "user" | "system";
   timestamp: Date;
+  code?: string;
 }
 
 interface ChatPanelProps {
@@ -25,8 +28,9 @@ const ChatPanel: React.FC<ChatPanelProps> = ({ className }) => {
     },
   ]);
   const [loading, setLoading] = useState(false);
+  const { toast } = useToast();
 
-  const handleSubmit = (command: string) => {
+  const handleSubmit = async (command: string) => {
     // Add user message
     const userMessage: Message = {
       id: Date.now().toString(),
@@ -38,17 +42,41 @@ const ChatPanel: React.FC<ChatPanelProps> = ({ className }) => {
     setMessages([...messages, userMessage]);
     setLoading(true);
     
-    // Simulate AI response
-    setTimeout(() => {
+    try {
+      // Enviar prompt a DeepSeek
+      const response = await generateCode({ prompt: command });
+      
+      // Agregar respuesta del sistema
       const aiResponse: Message = {
         id: (Date.now() + 1).toString(),
-        content: "I'll help you build that! Let me generate some code for you.",
+        content: response.explanation,
+        sender: "system",
+        timestamp: new Date(),
+        code: response.code,
+      };
+      
+      setMessages((prev) => [...prev, aiResponse]);
+    } catch (error) {
+      console.error("Error al generar código:", error);
+      
+      toast({
+        variant: "destructive",
+        title: "Error de generación",
+        description: "No se pudo generar el código. Por favor, intenta de nuevo.",
+      });
+      
+      // Agregar mensaje de error
+      const errorResponse: Message = {
+        id: (Date.now() + 1).toString(),
+        content: "Lo siento, hubo un error al generar el código. Por favor, intenta con un prompt diferente o revisa tu conexión a internet.",
         sender: "system",
         timestamp: new Date(),
       };
-      setMessages((prev) => [...prev, aiResponse]);
+      
+      setMessages((prev) => [...prev, errorResponse]);
+    } finally {
       setLoading(false);
-    }, 1000);
+    }
   };
 
   return (
@@ -65,6 +93,12 @@ const ChatPanel: React.FC<ChatPanelProps> = ({ className }) => {
             )}
           >
             <div className="text-sm whitespace-pre-wrap">{message.content}</div>
+            
+            {message.code && (
+              <div className="mt-3">
+                <CodeBlock code={message.code} language="tsx" />
+              </div>
+            )}
           </div>
         ))}
         

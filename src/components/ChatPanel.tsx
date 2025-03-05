@@ -5,6 +5,14 @@ import { cn } from "@/lib/utils";
 import CodeBlock from "./CodeBlock";
 import { generateCode } from "@/services/deepSeekService";
 import { useToast } from "@/hooks/use-toast";
+import { FileText } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+
+interface FileChange {
+  path: string;
+  content: string;
+  action: 'create' | 'update' | 'delete';
+}
 
 interface Message {
   id: string;
@@ -12,17 +20,19 @@ interface Message {
   sender: "user" | "system";
   timestamp: Date;
   code?: string;
+  files?: FileChange[];
 }
 
 interface ChatPanelProps {
   className?: string;
+  onFilesGenerated?: (files: FileChange[]) => void;
 }
 
-const ChatPanel: React.FC<ChatPanelProps> = ({ className }) => {
+const ChatPanel: React.FC<ChatPanelProps> = ({ className, onFilesGenerated }) => {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: "welcome",
-      content: "👋 Welcome to Lovable Clone! I'm here to help you build beautiful web applications. What would you like to create today?",
+      content: "👋 ¡Bienvenido a Lovable Clone! Estoy aquí para ayudarte a construir aplicaciones web hermosas. ¿Qué te gustaría crear hoy?",
       sender: "system",
       timestamp: new Date(),
     },
@@ -53,9 +63,15 @@ const ChatPanel: React.FC<ChatPanelProps> = ({ className }) => {
         sender: "system",
         timestamp: new Date(),
         code: response.code,
+        files: response.files
       };
       
       setMessages((prev) => [...prev, aiResponse]);
+      
+      // Notificar a los componentes padres sobre los archivos generados
+      if (response.files && onFilesGenerated) {
+        onFilesGenerated(response.files);
+      }
     } catch (error) {
       console.error("Error al generar código:", error);
       
@@ -94,9 +110,37 @@ const ChatPanel: React.FC<ChatPanelProps> = ({ className }) => {
           >
             <div className="text-sm whitespace-pre-wrap">{message.content}</div>
             
-            {message.code && (
+            {message.code && !message.files && (
               <div className="mt-3">
                 <CodeBlock code={message.code} language="tsx" />
+              </div>
+            )}
+            
+            {message.files && message.files.length > 0 && (
+              <div className="mt-4 space-y-3">
+                <div className="text-xs font-medium text-lovable-gray">Archivos modificados:</div>
+                {message.files.map((file, index) => (
+                  <div key={index} className="border border-lovable-lightgray/50 rounded-md overflow-hidden">
+                    <div className="bg-lovable-lightgray/30 px-3 py-2 flex justify-between items-center">
+                      <div className="flex items-center space-x-2">
+                        <FileText size={14} className="text-lovable-gray" />
+                        <span className="text-xs font-medium">{file.path}</span>
+                      </div>
+                      <Badge className={cn(
+                        "text-xs",
+                        file.action === 'create' ? 'bg-green-100 text-green-800' :
+                        file.action === 'update' ? 'bg-blue-100 text-blue-800' :
+                        'bg-red-100 text-red-800'
+                      )}>
+                        {file.action === 'create' ? 'Creado' : 
+                         file.action === 'update' ? 'Actualizado' : 'Eliminado'}
+                      </Badge>
+                    </div>
+                    <div className="max-h-96 overflow-y-auto">
+                      <CodeBlock code={file.content} language={file.path.endsWith('.tsx') || file.path.endsWith('.ts') ? 'tsx' : 'jsx'} />
+                    </div>
+                  </div>
+                ))}
               </div>
             )}
           </div>
@@ -116,7 +160,7 @@ const ChatPanel: React.FC<ChatPanelProps> = ({ className }) => {
       <div className="p-4 border-t border-lovable-lightgray/50">
         <CommandInput 
           onSubmit={handleSubmit} 
-          placeholder="Tell me what you want to build..."
+          placeholder="Dime qué quieres construir..."
           disabled={loading} 
         />
       </div>

@@ -9,9 +9,28 @@ import { cn } from "@/lib/utils";
 import { ChevronLeft, ChevronRight, Files } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
+interface FileChange {
+  path: string;
+  content: string;
+  action: 'create' | 'update' | 'delete';
+}
+
 const Index = () => {
   const isMobile = useIsMobile();
   const [showFileExplorer, setShowFileExplorer] = useState(true);
+  const [generatedFiles, setGeneratedFiles] = useState<FileChange[]>([]);
+  const [selectedFilePath, setSelectedFilePath] = useState<string | null>(null);
+
+  const handleFilesGenerated = (files: FileChange[]) => {
+    setGeneratedFiles(files);
+    if (files.length > 0 && !selectedFilePath) {
+      setSelectedFilePath(files[0].path);
+    }
+  };
+
+  const handleFileSelect = (path: string) => {
+    setSelectedFilePath(path);
+  };
 
   return (
     <MainLayout>
@@ -23,7 +42,12 @@ const Index = () => {
             showFileExplorer ? "w-64" : "w-0"
           )}
         >
-          {showFileExplorer && <FileExplorer />}
+          {showFileExplorer && (
+            <FileExplorer 
+              generatedFiles={generatedFiles}
+              onFileSelect={handleFileSelect}
+            />
+          )}
           <Button
             variant="ghost"
             size="icon"
@@ -44,14 +68,16 @@ const Index = () => {
             className={cn(
               "h-full",
               !showFileExplorer && "col-span-1 md:col-span-1"
-            )} 
+            )}
+            onFilesGenerated={handleFilesGenerated}
           />
           
           <PreviewPanel 
             className={cn(
               "h-full",
               !isMobile ? "block" : "hidden"
-            )} 
+            )}
+            files={generatedFiles}
           />
         </div>
       </div>

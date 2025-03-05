@@ -1,3 +1,4 @@
+
 // Este archivo simula la interacción con la API de DeepSeek
 
 interface DeepSeekResponse {
@@ -201,37 +202,47 @@ function App() {
       ]
     };
   } else if (prompt.toLowerCase().includes("login")) {
-    return `
-// Login Component
-import React, { useState } from 'react';
+    return {
+      code: `// Login Component`,
+      explanation: `He generado un componente de login para tu aplicación.`,
+      generationId: `gen_${Math.random().toString(36).substring(2, 10)}`,
+      files: [
+        {
+          path: "src/components/Login.tsx",
+          action: "create",
+          content: `import React, { useState } from 'react';
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleLogin = async (e) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     // Aquí iría la lógica de autenticación
     console.log('Login attempt with:', { email, password });
   };
 
   return (
-    <div className="login-container">
-      <h2>Iniciar Sesión</h2>
-      <form onSubmit={handleLogin}>
-        <div className="form-group">
-          <label htmlFor="email">Email:</label>
-          <input
+    <div className="max-w-md mx-auto p-6 bg-white rounded-lg shadow-md">
+      <h2 className="text-2xl font-bold mb-6 text-center">Iniciar Sesión</h2>
+      <form onSubmit={handleLogin} className="space-y-4">
+        <div className="space-y-2">
+          <Label htmlFor="email">Email</Label>
+          <Input
             type="email"
             id="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
+            placeholder="tu@email.com"
           />
         </div>
-        <div className="form-group">
-          <label htmlFor="password">Contraseña:</label>
-          <input
+        <div className="space-y-2">
+          <Label htmlFor="password">Contraseña</Label>
+          <Input
             type="password"
             id="password"
             value={password}
@@ -239,21 +250,40 @@ const Login = () => {
             required
           />
         </div>
-        <button type="submit">Iniciar Sesión</button>
+        <Button type="submit" className="w-full bg-lovable-blue hover:bg-lovable-blue/90">
+          Iniciar Sesión
+        </Button>
       </form>
     </div>
   );
 };
 
-export default Login;
-`;
+export default Login;`
+        }
+      ]
+    };
   } else if (prompt.toLowerCase().includes("dashboard")) {
-    return `
-// Dashboard Component
-import React, { useEffect, useState } from 'react';
+    return {
+      code: `// Dashboard Component`,
+      explanation: `He generado un componente de dashboard para tu aplicación.`,
+      generationId: `gen_${Math.random().toString(36).substring(2, 10)}`,
+      files: [
+        {
+          path: "src/components/Dashboard.tsx",
+          action: "create",
+          content: `import React, { useEffect, useState } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+
+interface Project {
+  id: number;
+  name: string;
+  status: 'active' | 'completed' | 'pending';
+  lastUpdated: Date;
+}
 
 const Dashboard = () => {
-  const [projects, setProjects] = useState([]);
+  const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -269,35 +299,91 @@ const Dashboard = () => {
       });
   }, []);
 
-  const fetchProjects = async () => {
+  const fetchProjects = async (): Promise<Project[]> => {
     // Simulamos datos de proyectos
-    await delay(1000);
+    await new Promise(resolve => setTimeout(resolve, 1000));
     return [
-      { id: 1, name: 'Proyecto A', status: 'active' },
-      { id: 2, name: 'Proyecto B', status: 'completed' },
-      { id: 3, name: 'Proyecto C', status: 'pending' }
+      { id: 1, name: 'Proyecto A', status: 'active', lastUpdated: new Date() },
+      { id: 2, name: 'Proyecto B', status: 'completed', lastUpdated: new Date() },
+      { id: 3, name: 'Proyecto C', status: 'pending', lastUpdated: new Date() }
     ];
   };
 
-  if (loading) return <div>Cargando...</div>;
+  if (loading) return <div className="flex justify-center items-center h-64">Cargando...</div>;
 
   return (
-    <div className="dashboard">
-      <h1>Dashboard</h1>
-      <div className="projects-list">
-        {projects.map(project => (
-          <div key={project.id} className="project-card">
-            <h3>{project.name}</h3>
-            <span className={\`status \${project.status}\`}>{project.status}</span>
+    <div className="space-y-6">
+      <h1 className="text-3xl font-bold">Dashboard</h1>
+      
+      <Tabs defaultValue="all">
+        <TabsList>
+          <TabsTrigger value="all">Todos</TabsTrigger>
+          <TabsTrigger value="active">Activos</TabsTrigger>
+          <TabsTrigger value="completed">Completados</TabsTrigger>
+          <TabsTrigger value="pending">Pendientes</TabsTrigger>
+        </TabsList>
+        
+        <TabsContent value="all" className="mt-4">
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+            {projects.map(project => (
+              <Card key={project.id}>
+                <CardHeader className="pb-2">
+                  <CardTitle>{project.name}</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="text-sm text-gray-500">
+                    Última actualización: {project.lastUpdated.toLocaleDateString()}
+                  </div>
+                  <div className="mt-2">
+                    <span className={
+                      'inline-block px-2 py-1 text-xs rounded ' + 
+                      (project.status === 'active' ? 'bg-green-100 text-green-800' : 
+                       project.status === 'completed' ? 'bg-blue-100 text-blue-800' : 
+                       'bg-yellow-100 text-yellow-800')
+                    }>
+                      {project.status === 'active' ? 'Activo' : 
+                       project.status === 'completed' ? 'Completado' : 'Pendiente'}
+                    </span>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
           </div>
-        ))}
-      </div>
+        </TabsContent>
+        
+        {/* Contenido similar para los otros tabs */}
+        <TabsContent value="active" className="mt-4">
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+            {projects.filter(p => p.status === 'active').map(project => (
+              <Card key={project.id}>
+                <CardHeader className="pb-2">
+                  <CardTitle>{project.name}</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="text-sm text-gray-500">
+                    Última actualización: {project.lastUpdated.toLocaleDateString()}
+                  </div>
+                  <div className="mt-2">
+                    <span className="inline-block px-2 py-1 text-xs rounded bg-green-100 text-green-800">
+                      Activo
+                    </span>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </TabsContent>
+        
+        {/* Otros tabs similares */}
+      </Tabs>
     </div>
   );
 };
 
-export default Dashboard;
-`;
+export default Dashboard;`
+        }
+      ]
+    };
   } else {
     return {
       code: `// Código genérico generado`,

@@ -14,13 +14,27 @@ interface FileChange {
 interface PreviewPanelProps {
   className?: string;
   files?: FileChange[];
+  initialView?: "preview" | "code";
+  onViewChange?: (view: "preview" | "code") => void;
 }
 
-const PreviewPanel: React.FC<PreviewPanelProps> = ({ className, files = [] }) => {
-  const [view, setView] = useState<"preview" | "code">("preview");
+const PreviewPanel: React.FC<PreviewPanelProps> = ({ 
+  className, 
+  files = [], 
+  initialView = "preview",
+  onViewChange
+}) => {
+  const [view, setView] = useState<"preview" | "code">(initialView);
   const [loading, setLoading] = useState(false);
   const [selectedFile, setSelectedFile] = useState<string | null>(null);
   const [iframeContent, setIframeContent] = useState<string>("");
+
+  // Sync with external view state if provided
+  useEffect(() => {
+    if (initialView && initialView !== view) {
+      setView(initialView);
+    }
+  }, [initialView]);
 
   // Seleccionar el primer archivo cuando los archivos cambian
   useEffect(() => {
@@ -113,6 +127,13 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({ className, files = [] }) =>
     }
   }, [files]);
 
+  const handleViewChange = (newView: "preview" | "code") => {
+    setView(newView);
+    if (onViewChange) {
+      onViewChange(newView);
+    }
+  };
+
   const refreshPreview = () => {
     setLoading(true);
     setTimeout(() => setLoading(false), 1000);
@@ -129,7 +150,7 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({ className, files = [] }) =>
               "text-xs",
               view === "preview" && "bg-lovable-lightgray/50"
             )}
-            onClick={() => setView("preview")}
+            onClick={() => handleViewChange("preview")}
           >
             <Eye size={14} className="mr-1" />
             Preview
@@ -141,7 +162,7 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({ className, files = [] }) =>
               "text-xs",
               view === "code" && "bg-lovable-lightgray/50"
             )}
-            onClick={() => setView("code")}
+            onClick={() => handleViewChange("code")}
           >
             <Code size={14} className="mr-1" />
             Code

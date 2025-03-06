@@ -68,7 +68,6 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({
   return (
     <div className={cn("flex flex-col h-full bg-lovable-lightgray/30", className)}>
       <div className="flex items-center justify-between p-2 border-b border-lovable-lightgray/50 bg-white">
-        <ViewToggle view={view} onViewChange={handleViewChange} />
         <RefreshButton loading={loading} onRefresh={refreshPreview} />
       </div>
       

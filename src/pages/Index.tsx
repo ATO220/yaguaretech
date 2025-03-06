@@ -1,15 +1,14 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import MainLayout from "@/layouts/MainLayout";
 import ChatPanel from "@/components/ChatPanel";
 import PreviewPanel from "@/components/PreviewPanel";
 import FileExplorer from "@/components/FileExplorer";
-import HistorySidebar from "@/components/HistorySidebar";
+import HistorySidebar, { HistoryItem } from "@/components/HistorySidebar";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
 import { ChevronLeft, ChevronRight, Files, MessageSquare, Code } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 interface FileChange {
   path: string;
@@ -24,16 +23,117 @@ const Index = () => {
   const [selectedFilePath, setSelectedFilePath] = useState<string | null>(null);
   const [currentTab, setCurrentTab] = useState<"chat" | "history">("chat");
   const [currentRightTab, setCurrentRightTab] = useState<"preview" | "code">("preview");
+  
+  // History state management
+  const [historyItems, setHistoryItems] = useState<HistoryItem[]>([
+    {
+      id: "1",
+      title: "Listado de alumnos",
+      timestamp: new Date(Date.now() - 1000 * 60 * 5),
+      isActive: true,
+      files: []
+    },
+    {
+      id: "2",
+      title: "Login para aplicación",
+      timestamp: new Date(Date.now() - 1000 * 60 * 60),
+      files: []
+    },
+    {
+      id: "3",
+      title: "Dashboard administrativo",
+      timestamp: new Date(Date.now() - 1000 * 60 * 60 * 3),
+      files: []
+    },
+  ]);
+  
+  // Context tracking for iterative development
+  const [developmentContext, setDevelopmentContext] = useState<{
+    currentProject: string | null;
+    iterations: FileChange[][];
+  }>({
+    currentProject: null,
+    iterations: []
+  });
 
   const handleFilesGenerated = (files: FileChange[]) => {
+    // Update the files display
     setGeneratedFiles(files);
+    
+    // Store this iteration in our development context
+    setDevelopmentContext(prev => {
+      const newIterations = [...prev.iterations, files];
+      return {
+        ...prev,
+        iterations: newIterations
+      };
+    });
+    
+    // Create a new history item for this generation
+    const newHistoryItem: HistoryItem = {
+      id: Date.now().toString(),
+      title: getProjectTitle(files),
+      timestamp: new Date(),
+      files: files,
+      isActive: true
+    };
+    
+    // Update history items, mark the new one as active
+    setHistoryItems(prev => {
+      const updatedItems = prev.map(item => ({
+        ...item,
+        isActive: false
+      }));
+      
+      return [newHistoryItem, ...updatedItems];
+    });
+    
+    // Select first file if needed
     if (files.length > 0 && !selectedFilePath) {
       setSelectedFilePath(files[0].path);
     }
   };
 
+  // Helper to generate a title from files
+  const getProjectTitle = (files: FileChange[]): string => {
+    // Try to extract a meaningful name from component files
+    const componentFiles = files.filter(f => 
+      f.path.includes('components') && f.path.endsWith('.tsx')
+    );
+    
+    if (componentFiles.length > 0) {
+      // Extract component name from path
+      const componentName = componentFiles[0].path.split('/').pop()?.replace('.tsx', '');
+      return componentName ? `${componentName} component` : 'Nuevo componente';
+    }
+    
+    // If no component files, use the first file
+    if (files.length > 0) {
+      const fileName = files[0].path.split('/').pop();
+      return fileName ? `Proyecto ${fileName}` : 'Nuevo proyecto';
+    }
+    
+    return 'Nuevo proyecto';
+  };
+
   const handleFileSelect = (path: string) => {
     setSelectedFilePath(path);
+  };
+  
+  const handleHistoryItemClick = (item: HistoryItem) => {
+    // Set the clicked item as active
+    setHistoryItems(prev => 
+      prev.map(historyItem => ({
+        ...historyItem,
+        isActive: historyItem.id === item.id
+      }))
+    );
+    
+    // Load the files associated with this history item
+    if (item.files && item.files.length > 0) {
+      setGeneratedFiles(item.files);
+      setSelectedFilePath(item.files[0].path);
+    }
   };
 
   return (
@@ -79,7 +179,11 @@ const Index = () => {
                 onFilesGenerated={handleFilesGenerated}
               />
             ) : (
-              <HistorySidebar className="h-full" />
+              <HistorySidebar 
+                className="h-full" 
+                historyItems={historyItems}
+                onHistoryItemClick={handleHistoryItemClick}
+              />
             )}
           </div>
         </div>

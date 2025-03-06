@@ -5,8 +5,6 @@ import { cn } from "@/lib/utils";
 import CodeBlock from "./CodeBlock";
 import { generateCode } from "@/services/deepSeekService";
 import { useToast } from "@/hooks/use-toast";
-import { FileText } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
 
 interface FileChange {
   path: string;
@@ -113,34 +111,6 @@ const ChatPanel: React.FC<ChatPanelProps> = ({ className, onFilesGenerated }) =>
             {message.code && !message.files && (
               <div className="mt-3">
                 <CodeBlock code={message.code} language="tsx" />
-              </div>
-            )}
-            
-            {message.files && message.files.length > 0 && (
-              <div className="mt-4 space-y-3">
-                <div className="text-xs font-medium text-lovable-gray">Archivos modificados:</div>
-                {message.files.map((file, index) => (
-                  <div key={index} className="border border-lovable-lightgray/50 rounded-md overflow-hidden">
-                    <div className="bg-lovable-lightgray/30 px-3 py-2 flex justify-between items-center">
-                      <div className="flex items-center space-x-2">
-                        <FileText size={14} className="text-lovable-gray" />
-                        <span className="text-xs font-medium">{file.path}</span>
-                      </div>
-                      <Badge className={cn(
-                        "text-xs",
-                        file.action === 'create' ? 'bg-green-100 text-green-800' :
-                        file.action === 'update' ? 'bg-blue-100 text-blue-800' :
-                        'bg-red-100 text-red-800'
-                      )}>
-                        {file.action === 'create' ? 'Creado' : 
-                         file.action === 'update' ? 'Actualizado' : 'Eliminado'}
-                      </Badge>
-                    </div>
-                    <div className="max-h-96 overflow-y-auto">
-                      <CodeBlock code={file.content} language={file.path.endsWith('.tsx') || file.path.endsWith('.ts') ? 'tsx' : 'jsx'} />
-                    </div>
-                  </div>
-                ))}
               </div>
             )}
           </div>

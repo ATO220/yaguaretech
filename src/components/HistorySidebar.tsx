@@ -4,38 +4,31 @@ import { cn } from "@/lib/utils";
 import { Clock, MessageSquare } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-interface HistoryItem {
+interface FileChange {
+  path: string;
+  content: string;
+  action: 'create' | 'update' | 'delete';
+}
+
+export interface HistoryItem {
   id: string;
   title: string;
   timestamp: Date;
   isActive?: boolean;
+  files?: FileChange[];
 }
 
 interface HistorySidebarProps {
   className?: string;
+  historyItems: HistoryItem[];
+  onHistoryItemClick: (item: HistoryItem) => void;
 }
 
-const HistorySidebar: React.FC<HistorySidebarProps> = ({ className }) => {
-  // Mock history data
-  const historyItems: HistoryItem[] = [
-    {
-      id: "1",
-      title: "Listado de alumnos",
-      timestamp: new Date(Date.now() - 1000 * 60 * 5),
-      isActive: true,
-    },
-    {
-      id: "2",
-      title: "Login para aplicación",
-      timestamp: new Date(Date.now() - 1000 * 60 * 60),
-    },
-    {
-      id: "3",
-      title: "Dashboard administrativo",
-      timestamp: new Date(Date.now() - 1000 * 60 * 60 * 3),
-    },
-  ];
-
+const HistorySidebar: React.FC<HistorySidebarProps> = ({ 
+  className, 
+  historyItems, 
+  onHistoryItemClick 
+}) => {
   return (
     <div className={cn("h-full flex flex-col bg-white", className)}>
       <div className="border-b border-lovable-lightgray/50 p-4">
@@ -50,6 +43,7 @@ const HistorySidebar: React.FC<HistorySidebarProps> = ({ className }) => {
               "w-full justify-start text-xs py-2 h-auto",
               item.isActive ? "bg-lovable-blue/10 text-lovable-blue" : "text-lovable-gray hover:text-lovable-black"
             )}
+            onClick={() => onHistoryItemClick(item)}
           >
             <div className="flex items-start w-full">
               <div className="mr-2 mt-0.5">

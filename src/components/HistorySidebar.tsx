@@ -16,6 +16,8 @@ export interface HistoryItem {
   timestamp: Date;
   isActive?: boolean;
   files?: FileChange[];
+  iframeContent?: string;
+  explanation?: string;
 }
 
 interface HistorySidebarProps {

@@ -30,7 +30,7 @@ const ChatPanel: React.FC<ChatPanelProps> = ({ className, onFilesGenerated }) =>
   const [messages, setMessages] = useState<Message[]>([
     {
       id: "welcome",
-      content: "👋 ¡Bienvenido a Lovable Clone! Estoy aquí para ayudarte a construir aplicaciones web hermosas. ¿Qué te gustaría crear hoy?",
+      content: "👋 ¡Bienvenido a LlameYaguareTech! Estoy aquí para ayudarte a construir aplicaciones web hermosas. ¿Qué te gustaría crear hoy?",
       sender: "system",
       timestamp: new Date(),
     },
@@ -94,7 +94,7 @@ const ChatPanel: React.FC<ChatPanelProps> = ({ className, onFilesGenerated }) =>
   };
 
   return (
-    <div className={cn("flex flex-col h-full bg-white border-r border-lovable-lightgray/50", className)}>
+    <div className={cn("flex flex-col h-full bg-background border-r border-border", className)}>
       <div className="flex-1 overflow-y-auto p-4 space-y-6">
         {messages.map((message) => (
           <div
@@ -102,8 +102,8 @@ const ChatPanel: React.FC<ChatPanelProps> = ({ className, onFilesGenerated }) =>
             className={cn(
               "max-w-[90%] rounded-lg animate-slide-up",
               message.sender === "user"
-                ? "ml-auto bg-lovable-blue/10 text-lovable-black p-3"
-                : "mr-auto bg-white border border-lovable-lightgray/50 p-3"
+                ? "ml-auto bg-primary/10 text-foreground p-3"
+                : "mr-auto bg-card border border-border p-3"
             )}
           >
             <div className="text-sm whitespace-pre-wrap">{message.content}</div>
@@ -117,17 +117,17 @@ const ChatPanel: React.FC<ChatPanelProps> = ({ className, onFilesGenerated }) =>
         ))}
         
         {loading && (
-          <div className="mr-auto bg-white border border-lovable-lightgray/50 p-3 rounded-lg max-w-[90%] animate-pulse-slow">
+          <div className="mr-auto bg-card border border-border p-3 rounded-lg max-w-[90%] animate-pulse-slow">
             <div className="text-sm flex items-center space-x-1">
-              <div className="w-2 h-2 bg-lovable-blue rounded-full animate-pulse-slow"></div>
-              <div className="w-2 h-2 bg-lovable-blue rounded-full animate-pulse-slow delay-100"></div>
-              <div className="w-2 h-2 bg-lovable-blue rounded-full animate-pulse-slow delay-200"></div>
+              <div className="w-2 h-2 bg-primary rounded-full animate-pulse-slow"></div>
+              <div className="w-2 h-2 bg-primary rounded-full animate-pulse-slow delay-100"></div>
+              <div className="w-2 h-2 bg-primary rounded-full animate-pulse-slow delay-200"></div>
             </div>
           </div>
         )}
       </div>
       
-      <div className="p-4 border-t border-lovable-lightgray/50">
+      <div className="p-4 border-t border-border">
         <CommandInput 
           onSubmit={handleSubmit} 
           placeholder="Dime qué quieres construir..."

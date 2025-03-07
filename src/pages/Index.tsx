@@ -143,17 +143,17 @@ const Index = () => {
     <MainLayout>
       <ResizablePanelGroup direction="horizontal" className="h-full">
         {/* Left Side: Chat/History Section */}
-        <ResizablePanel defaultSize={50} minSize={30} maxSize={70} className="h-full">
-          <div className="flex flex-col h-full border-r border-yaguaretech-lightgray/50">
+        <ResizablePanel defaultSize={30} minSize={20} maxSize={50} className="h-full">
+          <div className="flex flex-col h-full border-r border-border">
             {/* Tabs for Chat/History */}
-            <div className="flex border-b border-yaguaretech-lightgray/50">
+            <div className="flex border-b border-border">
               <Button
                 variant="ghost"
                 className={cn(
                   "flex-1 rounded-none border-b-2",
                   currentTab === "chat" 
-                    ? "border-yaguaretech-blue text-yaguaretech-blue" 
-                    : "border-transparent text-yaguaretech-gray"
+                    ? "border-primary text-primary" 
+                    : "border-transparent text-muted-foreground"
                 )}
                 onClick={() => setCurrentTab("chat")}
               >
@@ -165,8 +165,8 @@ const Index = () => {
                 className={cn(
                   "flex-1 rounded-none border-b-2",
                   currentTab === "history" 
-                    ? "border-yaguaretech-blue text-yaguaretech-blue" 
-                    : "border-transparent text-yaguaretech-gray"
+                    ? "border-primary text-primary" 
+                    : "border-transparent text-muted-foreground"
                 )}
                 onClick={() => setCurrentTab("history")}
               >
@@ -193,10 +193,10 @@ const Index = () => {
           </div>
         </ResizablePanel>
 
-        <ResizableHandle withHandle className="bg-yaguaretech-lightgray/30" />
+        <ResizableHandle withHandle className="bg-border hover:bg-primary/50 transition-colors" />
 
         {/* Right Side: Preview/Code */}
-        <ResizablePanel defaultSize={50} minSize={30} maxSize={70} className="h-full">
+        <ResizablePanel defaultSize={70} minSize={50} maxSize={80} className="h-full">
           <div className="flex flex-col h-full">
             {/* Right content area - full width now */}
             <div className="flex-1 overflow-hidden">

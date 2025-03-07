@@ -32,9 +32,9 @@ const HistorySidebar: React.FC<HistorySidebarProps> = ({
   onHistoryItemClick 
 }) => {
   return (
-    <div className={cn("h-full flex flex-col bg-white", className)}>
-      <div className="border-b border-lovable-lightgray/50 p-4">
-        <h2 className="text-sm font-medium">Historial</h2>
+    <div className={cn("h-full flex flex-col bg-background", className)}>
+      <div className="border-b border-border p-4">
+        <h2 className="text-sm font-medium text-foreground">Historial</h2>
       </div>
       <div className="flex-1 overflow-y-auto p-2 space-y-1">
         {historyItems.map((item) => (
@@ -43,7 +43,7 @@ const HistorySidebar: React.FC<HistorySidebarProps> = ({
             variant="ghost"
             className={cn(
               "w-full justify-start text-xs py-2 h-auto",
-              item.isActive ? "bg-lovable-blue/10 text-lovable-blue" : "text-lovable-gray hover:text-lovable-black"
+              item.isActive ? "bg-primary/10 text-primary" : "text-muted-foreground hover:text-foreground"
             )}
             onClick={() => onHistoryItemClick(item)}
           >
@@ -53,7 +53,7 @@ const HistorySidebar: React.FC<HistorySidebarProps> = ({
               </div>
               <div className="flex-1 text-left">
                 <div className="font-medium truncate">{item.title}</div>
-                <div className="flex items-center text-[10px] mt-1 text-lovable-gray">
+                <div className="flex items-center text-[10px] mt-1 text-muted-foreground">
                   <Clock size={10} className="mr-1" />
                   {formatDate(item.timestamp)}
                 </div>

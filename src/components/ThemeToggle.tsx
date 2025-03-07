@@ -12,13 +12,11 @@ const ThemeToggle: React.FC = () => {
       variant="ghost"
       size="icon"
       onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-      className="h-8 w-8 rounded-md text-yaguaretech-gray hover:text-yaguaretech-black hover:bg-yaguaretech-lightgray/50"
+      className="relative h-9 w-9 rounded-full bg-background transition-colors hover:bg-accent"
+      aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
     >
-      {theme === "dark" ? (
-        <Sun size={16} />
-      ) : (
-        <Moon size={16} />
-      )}
+      <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0 text-foreground" />
+      <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100 text-foreground" />
     </Button>
   );
 };

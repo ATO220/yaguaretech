@@ -63,7 +63,7 @@ export default {
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
 				},
-				lovable: {
+				yaguaretech: {
 					blue: '#4F46E5',
 					darkgray: '#1F2937',
 					gray: '#9CA3AF',

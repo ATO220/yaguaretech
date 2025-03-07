@@ -11,13 +11,15 @@ interface ViewToggleProps {
 
 const ViewToggle: React.FC<ViewToggleProps> = ({ view, onViewChange }) => {
   return (
-    <div className="flex items-center space-x-1">
+    <div className="inline-flex h-9 items-center justify-center rounded-lg bg-yaguaretech-lightgray/40 p-1">
       <Button
         variant="ghost"
         size="sm"
         className={cn(
-          "text-xs",
-          view === "preview" && "bg-lovable-lightgray/50"
+          "h-7 rounded-md px-3 text-xs font-medium",
+          view === "preview" 
+            ? "bg-white text-yaguaretech-black shadow-sm"
+            : "text-yaguaretech-gray hover:bg-white/40 hover:text-yaguaretech-black"
         )}
         onClick={() => onViewChange("preview")}
       >
@@ -28,8 +30,10 @@ const ViewToggle: React.FC<ViewToggleProps> = ({ view, onViewChange }) => {
         variant="ghost"
         size="sm"
         className={cn(
-          "text-xs",
-          view === "code" && "bg-lovable-lightgray/50"
+          "h-7 rounded-md px-3 text-xs font-medium",
+          view === "code" 
+            ? "bg-white text-yaguaretech-black shadow-sm"
+            : "text-yaguaretech-gray hover:bg-white/40 hover:text-yaguaretech-black"
         )}
         onClick={() => onViewChange("code")}
       >

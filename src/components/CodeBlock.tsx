@@ -25,8 +25,8 @@ const CodeBlock: React.FC<CodeBlockProps> = ({
   const detectedLanguage = filename ? getLanguageFromFilename(filename) : (language || "typescript");
   
   return (
-    <div className={cn("relative rounded-lg overflow-hidden", className)}>
-      <div className="flex items-center justify-between bg-lovable-darkgray px-4 py-2 text-xs text-white">
+    <div className={cn("relative rounded-lg overflow-hidden border border-border", className)}>
+      <div className="flex items-center justify-between bg-muted px-4 py-2 text-xs text-muted-foreground">
         <span>{filename || detectedLanguage}</span>
       </div>
       <Editor
@@ -45,6 +45,8 @@ const CodeBlock: React.FC<CodeBlockProps> = ({
             vertical: "auto",
             horizontal: "auto",
           },
+          fontFamily: "'Fira Code', monospace",
+          fontLigatures: true,
         }}
       />
     </div>

@@ -8,6 +8,11 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
 import { MessageSquare, Code } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { 
+  ResizablePanel,
+  ResizablePanelGroup,
+  ResizableHandle 
+} from "@/components/ui/resizable";
 
 interface FileChange {
   path: string;
@@ -136,97 +141,75 @@ const Index = () => {
 
   return (
     <MainLayout>
-      <div className="flex h-full overflow-hidden">
+      <ResizablePanelGroup direction="horizontal" className="h-full">
         {/* Left Side: Chat/History Section */}
-        <div className="flex flex-col w-1/2 h-full border-r border-lovable-lightgray/50">
-          {/* Tabs for Chat/History */}
-          <div className="flex border-b border-lovable-lightgray/50">
-            <Button
-              variant="ghost"
-              className={cn(
-                "flex-1 rounded-none border-b-2",
-                currentTab === "chat" 
-                  ? "border-lovable-blue text-lovable-blue" 
-                  : "border-transparent text-lovable-gray"
+        <ResizablePanel defaultSize={50} minSize={30} maxSize={70} className="h-full">
+          <div className="flex flex-col h-full border-r border-yaguaretech-lightgray/50">
+            {/* Tabs for Chat/History */}
+            <div className="flex border-b border-yaguaretech-lightgray/50">
+              <Button
+                variant="ghost"
+                className={cn(
+                  "flex-1 rounded-none border-b-2",
+                  currentTab === "chat" 
+                    ? "border-yaguaretech-blue text-yaguaretech-blue" 
+                    : "border-transparent text-yaguaretech-gray"
+                )}
+                onClick={() => setCurrentTab("chat")}
+              >
+                <MessageSquare size={16} className="mr-2" />
+                Chat
+              </Button>
+              <Button
+                variant="ghost"
+                className={cn(
+                  "flex-1 rounded-none border-b-2",
+                  currentTab === "history" 
+                    ? "border-yaguaretech-blue text-yaguaretech-blue" 
+                    : "border-transparent text-yaguaretech-gray"
+                )}
+                onClick={() => setCurrentTab("history")}
+              >
+                <Code size={16} className="mr-2" />
+                Historial
+              </Button>
+            </div>
+            
+            {/* Content based on selected tab */}
+            <div className="flex-1 overflow-hidden">
+              {currentTab === "chat" ? (
+                <ChatPanel 
+                  className="h-full"
+                  onFilesGenerated={handleFilesGenerated}
+                />
+              ) : (
+                <HistorySidebar 
+                  className="h-full" 
+                  historyItems={historyItems}
+                  onHistoryItemClick={handleHistoryItemClick}
+                />
               )}
-              onClick={() => setCurrentTab("chat")}
-            >
-              <MessageSquare size={16} className="mr-2" />
-              Chat
-            </Button>
-            <Button
-              variant="ghost"
-              className={cn(
-                "flex-1 rounded-none border-b-2",
-                currentTab === "history" 
-                  ? "border-lovable-blue text-lovable-blue" 
-                  : "border-transparent text-lovable-gray"
-              )}
-              onClick={() => setCurrentTab("history")}
-            >
-              <Code size={16} className="mr-2" />
-              Historial
-            </Button>
+            </div>
           </div>
-          
-          {/* Content based on selected tab */}
-          <div className="flex-1 overflow-hidden">
-            {currentTab === "chat" ? (
-              <ChatPanel 
-                className="h-full"
-                onFilesGenerated={handleFilesGenerated}
-              />
-            ) : (
-              <HistorySidebar 
-                className="h-full" 
-                historyItems={historyItems}
-                onHistoryItemClick={handleHistoryItemClick}
-              />
-            )}
-          </div>
-        </div>
+        </ResizablePanel>
+
+        <ResizableHandle withHandle className="bg-yaguaretech-lightgray/30" />
 
         {/* Right Side: Preview/Code */}
-        <div className="flex flex-col w-1/2 h-full">
-          {/* Tabs for Preview/Code */}
-          <div className="flex border-b border-lovable-lightgray/50">
-            <Button
-              variant="ghost"
-              className={cn(
-                "flex-1 rounded-none border-b-2",
-                currentRightTab === "preview" 
-                  ? "border-lovable-blue text-lovable-blue" 
-                  : "border-transparent text-lovable-gray"
-              )}
-              onClick={() => setCurrentRightTab("preview")}
-            >
-              Preview
-            </Button>
-            <Button
-              variant="ghost"
-              className={cn(
-                "flex-1 rounded-none border-b-2",
-                currentRightTab === "code" 
-                  ? "border-lovable-blue text-lovable-blue" 
-                  : "border-transparent text-lovable-gray"
-              )}
-              onClick={() => setCurrentRightTab("code")}
-            >
-              Code
-            </Button>
+        <ResizablePanel defaultSize={50} minSize={30} maxSize={70} className="h-full">
+          <div className="flex flex-col h-full">
+            {/* Right content area - full width now */}
+            <div className="flex-1 overflow-hidden">
+              <PreviewPanel 
+                className="h-full"
+                files={generatedFiles}
+                initialView={currentRightTab}
+                onViewChange={(view) => setCurrentRightTab(view as "preview" | "code")}
+              />
+            </div>
           </div>
-          
-          {/* Right content area - full width now */}
-          <div className="flex-1 overflow-hidden">
-            <PreviewPanel 
-              className="h-full"
-              files={generatedFiles}
-              initialView={currentRightTab}
-              onViewChange={(view) => setCurrentRightTab(view as "preview" | "code")}
-            />
-          </div>
-        </div>
-      </div>
+        </ResizablePanel>
+      </ResizablePanelGroup>
     </MainLayout>
   );
 };

@@ -1,7 +1,6 @@
 
 import React from "react";
 import CodeBlock from "../CodeBlock";
-import FilesList from "./FilesList";
 import { getFileIconClass } from "@/utils/languageUtils";
 import { FileText } from "lucide-react";
 
@@ -27,10 +26,10 @@ const CodeView: React.FC<CodeViewProps> = ({
     : '';
     
   return (
-    <div className="h-full flex">
+    <div className="h-full flex bg-background">
       {files.length > 0 && (
-        <div className="w-64 border-r border-lovable-lightgray/50 bg-white overflow-y-auto">
-          <div className="p-2 text-xs font-medium text-lovable-gray">ARCHIVOS</div>
+        <div className="w-64 border-r border-border bg-background overflow-y-auto">
+          <div className="p-2 text-xs font-medium text-muted-foreground">ARCHIVOS</div>
           <div className="space-y-1 p-2">
             {files.map((file, index) => {
               const fileName = file.path.split('/').pop() || '';
@@ -41,8 +40,8 @@ const CodeView: React.FC<CodeViewProps> = ({
                   key={index}
                   className={`flex items-center px-2 py-1.5 text-sm rounded cursor-pointer ${
                     selectedFile === file.path
-                      ? "bg-lovable-lightgray/50"
-                      : "hover:bg-lovable-lightgray/30"
+                      ? "bg-muted"
+                      : "hover:bg-muted/50"
                   }`}
                   onClick={() => onFileSelect(file.path)}
                 >
@@ -59,7 +58,7 @@ const CodeView: React.FC<CodeViewProps> = ({
       <div className="flex-1 overflow-auto p-4">
         {selectedFile ? (
           <>
-            <div className="text-xs font-medium text-lovable-gray mb-2">{selectedFile}</div>
+            <div className="text-xs font-medium text-muted-foreground mb-2">{selectedFile}</div>
             <CodeBlock
               code={selectedFileContent}
               filename={selectedFile}
@@ -67,7 +66,7 @@ const CodeView: React.FC<CodeViewProps> = ({
             />
           </>
         ) : (
-          <div className="text-center text-lovable-gray py-8">
+          <div className="text-center text-muted-foreground py-8">
             No hay archivos para mostrar
           </div>
         )}

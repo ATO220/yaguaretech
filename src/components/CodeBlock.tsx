@@ -1,26 +1,52 @@
 
 import React from "react";
 import { cn } from "@/lib/utils";
+import Editor from "@monaco-editor/react";
+import { getLanguageFromFilename } from "@/utils/languageUtils";
 
 interface CodeBlockProps {
   code: string;
   language?: string;
+  filename?: string;
   className?: string;
+  readOnly?: boolean;
+  height?: string;
 }
 
 const CodeBlock: React.FC<CodeBlockProps> = ({
   code,
-  language = "tsx",
+  language,
+  filename,
   className,
+  readOnly = true,
+  height = "300px"
 }) => {
+  // If filename is provided, auto-detect language
+  const detectedLanguage = filename ? getLanguageFromFilename(filename) : (language || "typescript");
+  
   return (
     <div className={cn("relative rounded-lg overflow-hidden", className)}>
       <div className="flex items-center justify-between bg-lovable-darkgray px-4 py-2 text-xs text-white">
-        <span>{language}</span>
+        <span>{filename || detectedLanguage}</span>
       </div>
-      <pre className="bg-[#1E1E1E] text-white p-4 overflow-x-auto text-sm">
-        <code>{code}</code>
-      </pre>
+      <Editor
+        height={height}
+        language={detectedLanguage}
+        value={code}
+        theme="vs-dark"
+        options={{
+          readOnly,
+          minimap: { enabled: false },
+          scrollBeyondLastLine: false,
+          automaticLayout: true,
+          fontSize: 14,
+          lineNumbers: "on",
+          scrollbar: {
+            vertical: "auto",
+            horizontal: "auto",
+          },
+        }}
+      />
     </div>
   );
 };

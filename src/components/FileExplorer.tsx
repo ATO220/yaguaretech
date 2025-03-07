@@ -19,13 +19,8 @@ const FileExplorer: React.FC<FileExplorerProps> = ({
   onFileSelect = () => {},
   generatedFiles = []
 }) => {
-  return (
-    <div className={cn("h-full overflow-y-auto bg-white p-2", className)}>
-      <div className="text-center py-8 text-lovable-gray">
-        Para ver los archivos generados, use la vista "Code"
-      </div>
-    </div>
-  );
+  // Component is no longer used in the UI
+  return null;
 };
 
 export default FileExplorer;

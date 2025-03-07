@@ -3,11 +3,10 @@ import React, { useState, useEffect } from "react";
 import MainLayout from "@/layouts/MainLayout";
 import ChatPanel from "@/components/ChatPanel";
 import PreviewPanel from "@/components/PreviewPanel";
-import FileExplorer from "@/components/FileExplorer";
 import HistorySidebar, { HistoryItem } from "@/components/HistorySidebar";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
-import { ChevronLeft, ChevronRight, Files, MessageSquare, Code } from "lucide-react";
+import { MessageSquare, Code } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface FileChange {
@@ -18,7 +17,6 @@ interface FileChange {
 
 const Index = () => {
   const isMobile = useIsMobile();
-  const [showFileExplorer, setShowFileExplorer] = useState(true);
   const [generatedFiles, setGeneratedFiles] = useState<FileChange[]>([]);
   const [selectedFilePath, setSelectedFilePath] = useState<string | null>(null);
   const [currentTab, setCurrentTab] = useState<"chat" | "history">("chat");
@@ -188,7 +186,7 @@ const Index = () => {
           </div>
         </div>
 
-        {/* Right Side: File Explorer + Preview/Code */}
+        {/* Right Side: Preview/Code */}
         <div className="flex flex-col w-1/2 h-full">
           {/* Tabs for Preview/Code */}
           <div className="flex border-b border-lovable-lightgray/50">
@@ -218,44 +216,14 @@ const Index = () => {
             </Button>
           </div>
           
-          {/* Right content area */}
-          <div className="flex flex-1 overflow-hidden">
-            {/* File Explorer */}
-            <div
-              className={cn(
-                "h-full transition-all duration-300 ease-in-out relative",
-                showFileExplorer ? "w-64" : "w-0"
-              )}
-            >
-              {showFileExplorer && (
-                <FileExplorer 
-                  generatedFiles={generatedFiles}
-                  onFileSelect={handleFileSelect}
-                />
-              )}
-              <Button
-                variant="ghost"
-                size="icon"
-                className="absolute top-2 right-[-12px] h-6 w-6 rounded-full bg-white border border-lovable-lightgray/50 z-10 text-lovable-gray hover:text-lovable-black"
-                onClick={() => setShowFileExplorer(!showFileExplorer)}
-              >
-                {showFileExplorer ? (
-                  <ChevronLeft size={14} />
-                ) : (
-                  <Files size={14} />
-                )}
-              </Button>
-            </div>
-
-            {/* Preview/Code Panel */}
-            <div className="flex-1 overflow-hidden">
-              <PreviewPanel 
-                className="h-full"
-                files={generatedFiles}
-                initialView={currentRightTab}
-                onViewChange={(view) => setCurrentRightTab(view as "preview" | "code")}
-              />
-            </div>
+          {/* Right content area - full width now */}
+          <div className="flex-1 overflow-hidden">
+            <PreviewPanel 
+              className="h-full"
+              files={generatedFiles}
+              initialView={currentRightTab}
+              onViewChange={(view) => setCurrentRightTab(view as "preview" | "code")}
+            />
           </div>
         </div>
       </div>

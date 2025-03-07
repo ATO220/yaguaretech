@@ -1,10 +1,9 @@
-
-import React, { useState } from "react";
-import CommandInput from "./CommandInput";
-import { cn } from "@/lib/utils";
-import CodeBlock from "./CodeBlock";
-import { generateCode } from "@/services/deepSeekService";
 import { useToast } from "@/hooks/use-toast";
+import { cn } from "@/lib/utils";
+import { generateCode } from "@/services/deepSeekService";
+import React, { useState } from "react";
+import CodeBlock from "./CodeBlock";
+import CommandInput from "./CommandInput";
 
 interface FileChange {
   path: string;
@@ -30,7 +29,7 @@ const ChatPanel: React.FC<ChatPanelProps> = ({ className, onFilesGenerated }) =>
   const [messages, setMessages] = useState<Message[]>([
     {
       id: "welcome",
-      content: "👋 ¡Bienvenido a LlameYaguareTech! Estoy aquí para ayudarte a construir aplicaciones web hermosas. ¿Qué te gustaría crear hoy?",
+      content: "👋 ¡Bienvenido a YaguareTech! Estoy aquí para ayudarte a construir aplicaciones web hermosas. ¿Qué te gustaría crear hoy?",
       sender: "system",
       timestamp: new Date(),
     },
@@ -39,7 +38,6 @@ const ChatPanel: React.FC<ChatPanelProps> = ({ className, onFilesGenerated }) =>
   const { toast } = useToast();
 
   const handleSubmit = async (command: string) => {
-    // Add user message
     const userMessage: Message = {
       id: Date.now().toString(),
       content: command,
@@ -51,10 +49,8 @@ const ChatPanel: React.FC<ChatPanelProps> = ({ className, onFilesGenerated }) =>
     setLoading(true);
     
     try {
-      // Enviar prompt a DeepSeek
       const response = await generateCode({ prompt: command });
       
-      // Agregar respuesta del sistema
       const aiResponse: Message = {
         id: (Date.now() + 1).toString(),
         content: response.explanation,
@@ -66,7 +62,6 @@ const ChatPanel: React.FC<ChatPanelProps> = ({ className, onFilesGenerated }) =>
       
       setMessages((prev) => [...prev, aiResponse]);
       
-      // Notificar a los componentes padres sobre los archivos generados
       if (response.files && onFilesGenerated) {
         onFilesGenerated(response.files);
       }
@@ -79,7 +74,6 @@ const ChatPanel: React.FC<ChatPanelProps> = ({ className, onFilesGenerated }) =>
         description: "No se pudo generar el código. Por favor, intenta de nuevo.",
       });
       
-      // Agregar mensaje de error
       const errorResponse: Message = {
         id: (Date.now() + 1).toString(),
         content: "Lo siento, hubo un error al generar el código. Por favor, intenta con un prompt diferente o revisa tu conexión a internet.",
@@ -94,7 +88,7 @@ const ChatPanel: React.FC<ChatPanelProps> = ({ className, onFilesGenerated }) =>
   };
 
   return (
-    <div className={cn("flex flex-col h-full bg-background border-r border-border", className)}>
+    <div className={cn("flex flex-col h-full bg-background border-r border-border dark:bg-dark-background dark:border-dark-border", className)}>
       <div className="flex-1 overflow-y-auto p-4 space-y-6">
         {messages.map((message) => (
           <div
@@ -102,8 +96,8 @@ const ChatPanel: React.FC<ChatPanelProps> = ({ className, onFilesGenerated }) =>
             className={cn(
               "max-w-[90%] rounded-lg animate-slide-up",
               message.sender === "user"
-                ? "ml-auto bg-primary/10 text-foreground p-3"
-                : "mr-auto bg-card border border-border p-3"
+                ? "ml-auto bg-primary/10 text-foreground p-3 dark:bg-dark-primary/10 dark:text-dark-foreground"
+                : "mr-auto bg-card border border-border p-3 dark:bg-dark-card dark:border-dark-border"
             )}
           >
             <div className="text-sm whitespace-pre-wrap">{message.content}</div>
@@ -117,11 +111,11 @@ const ChatPanel: React.FC<ChatPanelProps> = ({ className, onFilesGenerated }) =>
         ))}
         
         {loading && (
-          <div className="mr-auto bg-card border border-border p-3 rounded-lg max-w-[90%] animate-pulse-slow">
+          <div className="mr-auto bg-card border border-border p-3 rounded-lg max-w-[90%] animate-pulse-slow dark:bg-dark-card dark:border-dark-border">
             <div className="text-sm flex items-center space-x-1">
-              <div className="w-2 h-2 bg-primary rounded-full animate-pulse-slow"></div>
-              <div className="w-2 h-2 bg-primary rounded-full animate-pulse-slow delay-100"></div>
-              <div className="w-2 h-2 bg-primary rounded-full animate-pulse-slow delay-200"></div>
+              <div className="w-2 h-2 bg-primary rounded-full animate-pulse-slow dark:bg-dark-primary"></div>
+              <div className="w-2 h-2 bg-primary rounded-full animate-pulse-slow delay-100 dark:bg-dark-primary"></div>
+              <div className="w-2 h-2 bg-primary rounded-full animate-pulse-slow delay-200 dark:bg-dark-primary"></div>
             </div>
           </div>
         )}

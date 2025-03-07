@@ -1,7 +1,7 @@
 
-import React, { useEffect, useState } from "react";
-import { useToast } from "@/hooks/use-toast";
 import { exchangeCodeForToken } from "@/api/github";
+import { useToast } from "@/hooks/use-toast";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const GitHubCallback: React.FC = () => {
@@ -59,7 +59,7 @@ const GitHubCallback: React.FC = () => {
           <h1 className="text-xl font-bold">Error de autenticación</h1>
           <p>{error}</p>
           <button 
-            className="mt-4 px-4 py-2 bg-lovable-blue text-white rounded"
+            className="mt-4 px-4 py-2 bg-yaguaretech-blue text-white rounded"
             onClick={() => navigate("/")}
           >
             Volver al inicio
@@ -67,9 +67,9 @@ const GitHubCallback: React.FC = () => {
         </div>
       ) : (
         <div className="text-center">
-          <div className="animate-spin h-8 w-8 border-4 border-lovable-blue border-t-transparent rounded-full mx-auto mb-4"></div>
+          <div className="animate-spin h-8 w-8 border-4 border-yaguaretech-blue border-t-transparent rounded-full mx-auto mb-4"></div>
           <h1 className="text-xl font-bold">Autenticando con GitHub...</h1>
-          <p className="text-lovable-gray">Estamos procesando tu autenticación, espera un momento...</p>
+          <p className="text-yaguaretech-gray">Estamos procesando tu autenticación, espera un momento...</p>
         </div>
       )}
     </div>

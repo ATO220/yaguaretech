@@ -1,7 +1,7 @@
 
-import React from "react";
 import { Button } from "@/components/ui/button";
 import { Settings, User } from "lucide-react";
+import React from "react";
 import GitHubAuth, { GitHubUser } from "./GitHubAuth";
 import ThemeToggle from "./ThemeToggle";
 
@@ -15,7 +15,7 @@ const Header: React.FC = () => {
   return (
     <header className="border-b border-yaguaretech-lightgray/50 h-14 px-4 flex items-center justify-between bg-background z-10">
       <div className="flex items-center space-x-4">
-        <div className="font-semibold text-foreground">LlameYaguareTech</div>
+        <div className="font-semibold text-foreground">YaguareTech</div>
       </div>
       
       <div className="flex items-center space-x-2">

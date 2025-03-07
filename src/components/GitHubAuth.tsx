@@ -1,8 +1,8 @@
 
-import React, { useEffect, useState } from "react";
-import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
+import { useToast } from "@/hooks/use-toast";
 import { Github, User } from "lucide-react";
+import React, { useEffect, useState } from "react";
 
 interface GitHubAuthProps {
   onAuthSuccess?: (userData: GitHubUser) => void;
@@ -68,14 +68,14 @@ const GitHubAuth: React.FC<GitHubAuthProps> = ({ onAuthSuccess }) => {
   if (user) {
     return (
       <div className="flex items-center space-x-2">
-        <div className="text-lovable-gray text-sm">
+        <div className="text-yaguaretech-gray text-sm">
           <span className="hidden md:inline">Conectado como </span>
           <span className="font-medium">@{user.login}</span>
         </div>
         <Button 
           variant="ghost" 
           size="icon"
-          className="text-lovable-gray hover:text-lovable-black hover:bg-lovable-lightgray/50 rounded-full transition-all-200"
+          className="text-yaguaretech-gray hover:text-yaguaretech-black hover:bg-yaguaretech-lightgray/50 rounded-full transition-all-200"
           onClick={handleLogout}
         >
           {user.avatar_url ? (
@@ -96,7 +96,7 @@ const GitHubAuth: React.FC<GitHubAuthProps> = ({ onAuthSuccess }) => {
     <Button 
       variant="outline" 
       size="sm"
-      className="text-lovable-gray hover:text-lovable-black hover:bg-lovable-lightgray/50 transition-all-200"
+      className="text-yaguaretech-gray hover:text-yaguaretech-black hover:bg-yaguaretech-lightgray/50 transition-all-200"
       onClick={handleGitHubAuth}
       disabled={isLoading}
     >

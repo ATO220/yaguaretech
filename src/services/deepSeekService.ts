@@ -170,7 +170,7 @@ const StudentList = () => {
     <div className="space-y-4">
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold">Listado de Alumnos</h1>
-        <Button className="bg-lovable-blue hover:bg-lovable-blue/90">
+        <Button className="bg-yaguaretech-blue hover:bg-yaguaretech-blue/90">
           <Plus className="mr-2 h-4 w-4" />
           Nuevo Alumno
         </Button>
@@ -189,7 +189,7 @@ const StudentList = () => {
       
       <div className="rounded-md border">
         <Table>
-          <thead className="bg-lovable-lightgray/30">
+          <thead className="bg-yaguaretech-lightgray/30">
             <tr>
               <th className="px-4 py-3 text-left">Nombre</th>
               <th className="px-4 py-3 text-left">Email</th>
@@ -200,7 +200,7 @@ const StudentList = () => {
           </thead>
           <tbody>
             {filteredStudents.map(student => (
-              <tr key={student.id} className="border-t border-lovable-lightgray/50">
+              <tr key={student.id} className="border-t border-yaguaretech-lightgray/50">
                 <td className="px-4 py-3">{student.name}</td>
                 <td className="px-4 py-3">{student.email}</td>
                 <td className="px-4 py-3">{student.grade}</td>
@@ -324,7 +324,7 @@ const Login = () => {
             required
           />
         </div>
-        <Button type="submit" className="w-full bg-lovable-blue hover:bg-lovable-blue/90">
+        <Button type="submit" className="w-full bg-yaguaretech-blue hover:bg-yaguaretech-blue/90">
           Iniciar Sesión
         </Button>
       </form>
